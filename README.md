@@ -6,4 +6,5 @@
 
 ## Descargar/Ver
 
-Ver alisases **[Click aquí]([https://eff.org](https://bit.ly/raw-git-aliases))**.
+🔗 [Ver lista de aliases](https://bit.ly/raw-git-aliases)
+
