@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Aliases de Git</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #2d3748;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 210mm;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            min-height: 297mm;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+            animation: float 20s linear infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateX(-50px) translateY(-50px); }
+            100% { transform: translateX(0px) translateY(0px); }
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            page-break-inside: avoid;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title::before {
+            content: '';
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .alias-group {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .alias-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .alias-code {
+            background: #2d3748;
+            color: #68d391;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        
+        .alias-description {
+            color: #4a5568;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .workflow-diagram {
+            background: linear-gradient(135deg, #ebf8ff 0%, #e6fffa 100%);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .workflow-diagram::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M0 0h100v100H0z" fill="none"/><path d="M20 20h60v60H20z" fill="none" stroke="rgba(102,126,234,0.1)" stroke-width="1"/></svg>') repeat;
+            opacity: 0.3;
+        }
+        
+        .workflow-steps {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .workflow-step {
+            background: white;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border: 3px solid #667eea;
+            color: #667eea;
+            position: relative;
+        }
+        
+        .workflow-step::after {
+            content: '→';
+            position: absolute;
+            right: -30px;
+            font-size: 1.5rem;
+            color: #667eea;
+        }
+        
+        .workflow-step:last-child::after {
+            display: none;
+        }
+        
+        .git-flow-visual {
+            background: #2d3748;
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.8rem;
+            overflow-x: auto;
+        }
+        
+        .branch-line {
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .branch-main { color: #68d391; }
+        .branch-feature { color: #fbb6ce; }
+        .branch-develop { color: #90cdf4; }
+        
+        .tips-box {
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+            border: 1px solid #feb2b2;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .tips-title {
+            font-weight: 600;
+            color: #c53030;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .print-footer {
+            text-align: center;
+            padding: 20px;
+            color: #718096;
+            font-size: 0.9rem;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 40px;
+        }
+        
+        @media print {
+            body { background: white; }
+            .container { box-shadow: none; }
+            .section { page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Guía de Aliases de Git</h1>
+            <p>Comandos optimizados para un flujo de trabajo eficiente</p>
+        </div>
+        
+        <div class="content">
+            <!-- Introducción -->
+            <div class="section">
+                <h2 class="section-title">📖 Introducción</h2>
+                <p>Esta guía presenta una colección de aliases de Git diseñados para acelerar tu flujo de trabajo. Cada alias transforma comandos largos en atajos memorables y eficientes.</p>
+            </div>
+            
+            <!-- Estado y Visualización -->
+            <div class="section">
+                <h2 class="section-title">📊 Estado y Visualización</h2>
+                
+                <div class="alias-group">
+                    <div class="alias-title">🔍 git s - Estado completo</div>
+                    <div class="alias-code">git s</div>
+                    <div class="alias-description">Muestra el estado incluyendo todos los archivos no rastreados</div>
+                </div>
+                
+                <div class="alias-group">
+                    <div class="alias-title">⚡ git ss - Estado resumido</div>
+                    <div class="alias-code">git ss
+# Output ejemplo:
+## main...origin/main
+ M src/app.js
+?? new-file.txt</div>
+                    <div class="alias-description">Versión compacta del estado con información de rama</div>
+                </div>
+                
+                <div class="alias-group">
+                    <div class="alias-title">🌿 git br / git bra - Listar ramas</div>
+                    <div class="alias-code">git br   # Ramas locales
+git bra  # Todas las ramas (locales + remotas)</div>
+                    <div class="alias-description">Visualiza ramas con información detallada</div>
+                </div>
+            </div>
+            
+            <!-- Historial y Logs -->
+            <div class="section">
+                <h2 class="section-title">📜 Historial y Logs</h2>
+                
+                <div class="alias-group">
+                    <div class="alias-title">📋 git ls - Log resumido con colores</div>
+                    <div class="alias-code">git ls
+# a1b2c3d (2 hours ago) Fix login validation [John Doe]
+# f4e5d6c (1 day ago) Add user authentication [Jane Smith]</div>
+                    <div class="alias-description">Historial compacto con colores y fechas relativas</div>
+                </div>
+                
+                <div class="alias-group">
+                    <div class="alias-title">📊 git ll - Log con archivos modificados</div>
+                    <div class="alias-code">git ll
+# Muestra commits con estadísticas de archivos
+# 5 files changed, 127 insertions(+), 23 deletions(-)</div>
+                    <div class="alias-description">Incluye estadísticas de cambios por commit</div>
+                </div>
+            </div>
+            
+            <!-- Diferencias -->
+            <div class="section">
+                <h2 class="section-title">🔍 Diferencias (Diffs)</h2>
+                
+                <div class="alias-group">
+                    <div class="alias-title">🔄 git d - Diff básico</div>
+                    <div class="alias-code">git d</div>
+                    <div class="alias-description">Atajo para mostrar diferencias de archivos modificados</div>
+                </div>
+                
+                <div class="alias-group">
+                    <div class="alias-title">⏪ git dl - Diff con commits anteriores</div>
+                    <div class="alias-code">git dl      # Compara con el commit anterior
+git dl 3    # Compara con 3 commits atrás</div>
+                    <div class="alias-description">Compara cambios con commits históricos</div>
+                </div>
+                
+                <div class="alias-group">
+                    <div class="alias-title">🎯 git diff-master - Comparar con rama principal</div>
+                    <div class="alias-code">git diff-master</div>
+                    <div class="alias-description">Muestra diferencias entre tu rama actual y origin/master</div>
+                </div>
+            </div>
+            
+            <!-- Manejo de Ramas -->
+            <div class="section">
+                <h2 class="section-title">🌿 Manejo de Ramas</h2>
+                
+                <div class="alias-group">
+                    <div class="alias-title">🚀 git co - Checkout rápido</div>
+                    <div class="alias-code">git co develop</div>
+                    <div class="alias-description">Cambia a la rama especificada</div>
+                </div>
+                
+                <div class="alias-group">
+                    <div class="alias-title">➕ git cob - Crear y cambiar a nueva rama</div>
+                    <div class="alias-code">git cob feature/user-profile</div>
+                    <div class="alias-description">Crea una nueva rama y cambia a ella automáticamente</div>
+                </div>
+                
+                <div class="alias-group">
+                    <div class="alias-title">🏠 git com / git cod - Ramas principales</div>
+                    <div class="alias-code">git com    # Cambia a main
+git cod    # Cambia a develop</div>
+                    <div class="alias-description">Atajos para cambiar a las ramas principales</div>
+                </div>
+            </div>
+            
+            <!-- Flujo de Trabajo Visual -->
+            <div class="workflow-diagram">
+                <h3 style="margin-bottom: 20px; color: #2d3748;">🔄 Flujo de Trabajo Típico</h3>
+                <div class="workflow-steps">
+                    <div class="workflow-step">git new<br>feature</div>
+                    <div class="workflow-step">git aa<br>git cm</div>
+                    <div class="workflow-step">git sync<br>main</div>
+                    <div class="workflow-step">git<br>publish</div>
+                </div>
+            </div>
+            
+            <!-- Agregar y Confirmar -->
+            <div class="section">
+                <h2 class="section-title">➕ Agregar y Confirmar Cambios</h2>
+                
+                <div class="alias-group">
+                    <div class="alias-title">📝 git a / git aa - Agregar archivos</div>
+                    <div class="alias-code">git a     # Agrega archivos modificados
+git aa    # Agrega TODOS los archivos</div>
+                    <div class="alias-description">Diferentes niveles de staging de archivos</div>
+                </div>
+                
+                <div class="alias-group">
+                    <div class="alias-title">💬 git cm - Commit con mensaje</div>
+                    <div class="alias-code">git cm "Fix user authentication bug"</div>
+                    <div class="alias-description">Hace commit con el mensaje especificado</div>
+                </div>
+                
+                <div class="alias-group">
+                    <div class="alias-title">⚡ git cma / git cmaa - Agregar y commit</div>
+                    <div class="alias-code">git cma "Update database schema"
+git cmaa "Add new user registration feature"</div>
+                    <div class="alias-description">Combina staging y commit en un solo comando</div>
+                </div>
+                
+                <div class="alias-group">
+                    <div class="alias-title">🚧 git wip / git unwip - Trabajo en progreso</div>
+                    <div class="alias-code">git wip     # Guarda trabajo temporal
+git unwip   # Recupera trabajo temporal</div>
+                    <div class="alias-description">Herramientas para guardar y recuperar trabajo temporal</div>
+                </div>
+            </div>
+            
+            <!-- Sincronización -->
+            <div class="section">
+                <h2 class="section-title">🔄 Sincronización con Remoto</h2>
+                
+                <div class="alias-group">
+                    <div class="alias-title">⬇️ git update - Actualizar con rebase</div>
+                    <div class="alias-code">git update</div>
+                    <div class="alias-description">Actualiza la rama actual manteniendo commits locales arriba</div>
+                </div>
+                
+                <div class="alias-group">
+                    <div class="alias-title">📤 git publish - Actualizar y publicar</div>
+                    <div class="alias-code">git publish</div>
+                    <div class="alias-description">Equivale a: git update && git ps</div>
+                </div>
+                
+                <div class="alias-group">
+                    <div class="alias-title">🔗 git sync - Sincronizar con rama padre</div>
+                    <div class="alias-code">git sync main</div>
+                    <div class="alias-description">Actualiza la rama padre y hace rebase en la rama actual</div>
+                </div>
+            </div>
+            
+            <!-- Visualización Git Flow -->
+            <div class="git-flow-visual">
+                <div style="text-align: center; margin-bottom: 15px; font-weight: bold;">📊 Visualización de Ramas</div>
+                <div class="branch-line">
+                    <span class="branch-main">● main</span>
+                    <span>──────●──────●──────●──────</span>
+                </div>
+                <div class="branch-line">
+                    <span class="branch-develop">● develop</span>
+                    <span>────●────●────●────</span>
+                </div>
+                <div class="branch-line">
+                    <span class="branch-feature">● feature/login</span>
+                    <span>──●──●──●</span>
+                </div>
+            </div>
+            
+            <!-- Limpieza y Utilidades -->
+            <div class="section">
+                <h2 class="section-title">🧹 Limpieza y Utilidades</h2>
+                
+                <div class="alias-group">
+                    <div class="alias-title">🛡️ git wipe - Reset seguro</div>
+                    <div class="alias-code">git wipe</div>
+                    <div class="alias-description">Hace commit temporal y reset hard (recuperable desde reflog)</div>
+                </div>
+                
+                <div class="alias-group">
+                    <div class="alias-title">🗑️ git cu - Limpiar ramas fusionadas</div>
+                    <div class="alias-code">git cu</div>
+                    <div class="alias-description">Elimina ramas locales ya fusionadas en main/develop</div>
+                </div>
+                
+                <div class="alias-group">
+                    <div class="alias-title">❌ git nah - Descartar cambios</div>
+                    <div class="alias-code">git nah</div>
+                    <div class="alias-description">Descarta todos los cambios no confirmados</div>
+                </div>
+            </div>
+            
+            <!-- Tips y Consejos -->
+            <div class="tips-box">
+                <div class="tips-title">💡 Tips y Consejos</div>
+                <ul style="padding-left: 20px;">
+                    <li><strong>Usa git wip</strong> antes de experimentar con código</li>
+                    <li><strong>git sync</strong> mantiene un historial limpio con rebase</li>
+                    <li><strong>git publish</strong> combina actualización y publicación</li>
+                    <li><strong>git ss</strong> es perfecto para verificaciones rápidas</li>
+                    <li><strong>git cu</strong> mantiene tu repositorio limpio automáticamente</li>
+                </ul>
+            </div>
+            
+            <!-- Ejemplo de Flujo Completo -->
+            <div class="section">
+                <h2 class="section-title">🎯 Ejemplo de Flujo Completo</h2>
+                <div class="alias-code">
+# 1. Crear nueva rama para feature
+git new feature/shopping-cart
+
+# 2. Trabajar y guardar progreso
+git aa
+git cm "Add shopping cart component"
+
+# 3. Sincronizar con main antes de terminar
+git sync main
+
+# 4. Publicar cambios
+git publish
+
+# 5. Limpiar ramas obsoletas
+git cu
+                </div>
+            </div>
+        </div>
+        
+        <div class="print-footer">
+            <p>📄 Guía de Aliases de Git - Optimiza tu flujo de trabajo</p>
+            <p>Para imprimir: Ctrl+P (Windows/Linux) o Cmd+P (Mac)</p>
+        </div>
+    </div>
+</body>
+</html>
